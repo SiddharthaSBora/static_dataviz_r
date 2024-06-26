@@ -31,7 +31,7 @@ ggplot(states, aes(fill=value))+
 
 # county level maps
 df_states<-mydata |>
-  filter(as.numeric(fips)>1000 & year ==2015 & state_name!="US")|>
+  filter(as.numeric(fips)>1000 & year ==2021 & state_name!="US")|>
   filter(variable_name == "overall_food_insecurity_rate")
 wv_counties <- counties(state="WV")|>
   left_join(df_states, by = join_by(GEOID==fips))

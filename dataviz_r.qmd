@@ -852,6 +852,33 @@ ggplot(states, aes(fill=value))+
 #| eval: false
 #| warning: false
 
+# county level maps
+df_states<-mydata |>
+  filter(as.numeric(fips)>1000 & year ==2021 & state_name!="US")|>
+  filter(variable_name == "overall_food_insecurity_rate")
+wv_counties <- counties(state="WV")|>
+  left_join(df_states, by = join_by(GEOID==fips))
+
+
+# plot the map
+ggplot(wv_counties, aes(fill=value))+
+  geom_sf()+
+  scale_fill_viridis_c()+
+  labs(title="Food Insecurity Rate in WV", fill="Rate")+
+  theme_minimal()
+
+
+
+```
+```{r}
+#| output: false
+#| echo: false
+# county level maps
+df_states<-df_foodinsecurity |>
+  filter(as.numeric(fips)>1000 & year ==2021 & state_name!="US")|>
+  filter(variable_name == "overall_food_insecurity_rate")
+wv_counties <- counties(state="WV")|>
+  left_join(df_states, by = join_by(GEOID==fips))
 
 ```
 
@@ -862,6 +889,13 @@ ggplot(states, aes(fill=value))+
 #| echo: false
 #| eval: true
 #| warning: false
+
+# plot the map
+ggplot(wv_counties, aes(fill=value))+
+  geom_sf()+
+  scale_fill_viridis_c()+
+  labs(title="County Level Food Insecurity Rate in WV, 2021", fill="Rate")+
+  theme_minimal()
 
 
 ```
@@ -879,6 +913,23 @@ ggplot(states, aes(fill=value))+
 #| eval: false
 #| warning: false
 
+plot_state_map<-function(df, state_name, variable_name, year){
+  df_states<-df |>
+    filter(as.numeric(fips)>1000 & year ==year & state_name==state_name)|>
+    filter(variable_name == variable_name)
+  
+  counties <- counties(state=state_name)|>
+    left_join(df_states, by = join_by(GEOID==fips))
+  
+  # plot the map
+  ggplot(counties, aes(fill=value))+
+    geom_sf()+
+    scale_fill_viridis_c()+
+    labs(title=paste(variable_name, "in", state_name), fill="Rate")+
+    theme_minimal()
+}
+
+plot_state_map(df_foodinsecurity, "Ohio", "overall_food_insecurity_rate", 2015)
 
 ```
 
@@ -889,55 +940,44 @@ ggplot(states, aes(fill=value))+
 #| echo: false
 #| eval: true
 #| warning: false
+plot_state_map<-function(df, state_name, variable_name, year){
+  df_states<-df |>
+    filter(as.numeric(fips)>1000 & year ==year & state_name==state_name)|>
+    filter(variable_name == variable_name)
+  
+  counties <- counties(state=state_name)|>
+    left_join(df_states, by = join_by(GEOID==fips))
+  
+  # plot the map
+  ggplot(counties, aes(fill=value))+
+    geom_sf()+
+    scale_fill_viridis_c()+
+    labs(title=paste(variable_name, "in", state_name), fill="Rate")+
+    theme_minimal()
+}
 
-
-```
-:::
-
-## Code Example
-
-::: panel-tabset
-#### Code
-
-```{r}
-#| label: chunk1
-#| echo: true
-#| eval: false
-#| warning: false
-
-
-```
-
-#### Output
-
-```{r}
-#| label: chunk2
-#| echo: false
-#| eval: true
-#| warning: false
-
+plot_state_map(df_foodinsecurity, "Ohio", "child_food_insecurity_rate", 2021)
 
 ```
 :::
 
 
-# Infographics using Quarto
 
-## Quarto Features
 
-## Put Together Everything in One Document
+## Infographics using Quarto
 
-## Simple Infographic
+-  Quarto has been around a while.
+-  Powerful tool for creating dynamic documents.
+-  Can be useful for static visualizations as well.
+-  In particular, visualization objects created in R can be easily embedded in Quarto documents.
+-  Put together everything for infographic.
 
 ## Parameterized Infographics/Reports
 
-A powerful feature of Quarto is the ability to parameterize your documents. This allows you to create a single document that can be rendered multiple times with different inputs. This is particularly useful for creating infographics that need to be customized for different audiences.
-
-While this competition is looking for static visualizations, parameterized infographics can still add dynamism to your submission while keeping the end product static.
-
-Let's see an example of how you can create a parameterized infographic in Quarto.
-
-## Example: Parameterized Infographics
+- A powerful feature of Quarto is the ability to parameterize your documents. 
+- This allows you to create a single document that can be rendered multiple times with different inputs. 
+- While this competition is looking for static visualizations, parameterized infographics can still add dynamism to your submission while keeping the end product static.
+- Let's see an example of how you can create a parameterized infographic in Quarto.
 
 
 # Additional Resources on Diverse Topics
