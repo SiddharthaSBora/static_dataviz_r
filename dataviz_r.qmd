@@ -1,0 +1,335 @@
+---
+title: "Data Visualization in R"
+subtitle: "Infographics using Quarto"
+title-short: "R DataViz"
+author: 
+   - "Siddhartha Bora"
+   - "Assistant Professor, West Virginia University"
+date: "June 26, 2024"
+date-format: long
+format: 
+  revealjs:
+    auto-strech: true
+    code-link: true
+    incremental: true
+    embed-resources: true
+---
+
+# Background
+
+
+## Slide 2
+
+## Slide 3
+
+## Slide 4
+
+## Slide 5
+
+## Disclaimers
+
+-   The content of this presentation is based on the author's experience and knowledge of R, and represent an opinionated view of data visualizations.
+-   R is vast and the content of this presentation is not exhaustive of all the data visualization features available in R. The author recognize that there are many other ways to visualize data in R.
+-   The contents of this presentation are tailored to create static data visualizations for a competition.
+-   The views and opinions expressed in this presentation are those of the author and do not necessarily reflect the official policy or position of any other agency, organization, employer or company.
+
+
+
+# Wrangling Data Prior to Visualization
+
+## Data Preprocessing takes most of the time
+- Data wrangling is the process of cleaning and transforming raw data into a format that is more suitable for analysis and visualization.
+- Data wrangling is often the most time-consuming part of the data analysis process.
+- The `tidyverse` package in R provides a set of tools for data wrangling that are designed to work together.
+
+## Tidy Data Principles
+
+1. Each variable is a column; each column is a variable.
+2. Each observation is a row; each row is an observation.
+3. Each value is a cell; each cell is a single value.
+
+Source: https://r4ds.hadley.nz/data-tidy
+
+## Long vs Wide Data
+- Long data is better for visualization
+- Wide data is better for analysis
+- Use `pivot_longer` and `pivot_wider` functions in the `tidyverse` to convert data between long and wide formats
+
+## Long Data Example
+
+## Wide Data Example
+
+
+## Data Wrangling for this presentation
+
+::: panel-tabset
+
+#### Code
+```{r}
+#| echo: true
+#| eval: false
+#| warning: false
+
+library("tidyverse")
+
+# load the data
+df_foodaccess<-read_csv("./0_data/df_foodaccess.csv")
+meta_foodaccess<-read_csv("./0_data/meta_foodaccess.csv")
+
+# let's keep only overall_food_insecurity_rate and child_food_insecurity_rate
+mydata<-df_foodaccess |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate"))
+
+# inspect first 10 rows
+head(mydata, 10)
+
+# write data into a csv
+write_csv(mydata, "./0_data/food_insecurity_dataviz.csv")
+
+
+```
+
+#### Output
+
+```{r}
+#| label: cleaned-dataset
+#| echo: false
+#| eval: true
+#| warning: false
+
+library("tidyverse")
+
+# load the data
+df_foodaccess<-read_csv("./0_data/df_foodaccess.csv")
+meta_foodaccess<-read_csv("./0_data/meta_foodaccess.csv")
+
+# let's keep only overall_food_insecurity_rate and child_food_insecurity_rate
+df_foodsecurity<-df_foodaccess |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", 
+                              "child_food_insecurity_rate")
+         )
+
+# inspect first 10 rows
+head(df_foodsecurity, 10)
+
+# write data into a csv
+write_csv(df_foodsecurity, "./0_data/food_insecurity_dataviz.csv")
+
+
+
+```
+:::
+
+
+# Data Visualization using ggplot2/Grammar of Graphics
+
+## Grammar of Graphics
+
+## Code Example
+
+::: panel-tabset
+
+#### Code
+```{r}
+#| label: chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+```
+
+#### Output
+
+```{r}
+#| label: chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+
+:::
+
+
+# Different Types of Plots
+
+- Line Plot
+- Bar Plot
+- Scatter Plot
+- Box Plot
+- Histogram
+- Pie Chart
+- Heatmap
+- Map
+
+
+
+
+
+## Slide 2
+
+## Slide 3
+
+## Slide 4
+
+
+
+## Arranging Plots
+
+## Treat the Plots as Objects
+
+## Reusing Code as Functions
+
+## 
+
+## Tools for creating maps in R
+
+- There are many tools available in R for creating maps.
+- The most popular tools are:
+  - ggplot2
+  - tmap
+  - leaflet
+  - mapview
+  - sf
+
+## Example 1: Prepare the Data for Map
+
+```{r}
+#| output: false
+#| echo: true
+library("tidyverse")
+library("sf")
+library("ggplot2")
+df<-read_csv("./0_data/food_insecurity_dataviz.csv")
+
+# let's plot a map
+df_states<-df |>
+  filter(as.numeric(fips)<=56 & year ==2015 & state_name!="US")|>
+  filter(variable_name == "overall_food_insecurity_rate")
+
+
+states<-tigris::states(filter_by = c(xmin=-125, xmax=-66, ymin=24, ymax=50))|>
+  left_join(df_states, by = join_by(GEOID==fips))
+
+```
+## Map of Overall Food Security in the US
+
+::: panel-tabset
+
+#### Code
+
+```{r}
+#| echo: true
+#| eval: false
+#| warning: false
+#| fig-cap: "US Food Insecurity Rate"
+
+# plot the map
+ggplot(states, aes(fill=value))+
+  geom_sf()+
+  scale_fill_viridis_c()+
+  labs(title="Food Insecurity Rate in the US", fill="Rate")+
+  theme_minimal()
+
+```
+
+#### Output
+
+```{r}
+#| label: fig-us-states-food-insecurity
+#| echo: false
+#| eval: true
+#| warning: false
+#| fig-cap: "US Food Insecurity Rate"
+
+# plot the map
+ggplot(states, aes(fill=value))+
+  geom_sf()+
+  scale_fill_viridis_c()+
+  labs(title="Food Insecurity Rate in the US", fill="Rate")+
+  theme_minimal()
+
+```
+:::
+
+## Slide 3
+
+## Slide 4
+
+## Slide 5
+
+## Create a functions for any state
+
+
+## 
+
+
+# Infographics using Quarto
+
+## Quarto Features
+
+## Put Together Everything in One Document
+
+## Simple Infographic
+
+## Parameterized Infographics/Reports
+
+A powerful feature of Quarto is the ability to parameterize your documents. This allows you to create a single document that can be rendered multiple times with different inputs. This is particularly useful for creating infographics that need to be customized for different audiences.
+
+While this competition is looking for static visualizations, parameterized infographics can still add dynamism to your submission while keeping the end product static.
+
+Let's see an example of how you can create a parameterized infographic in Quarto.
+
+## Example: Parameterized Infographics
+
+
+## Taking a bit further: Adding a UI using Shiny
+
+
+
+# Additional Resources on Diverse Topics
+
+## R Workflow Related Resources
+
+-   What They Forgot to Teach You About R: The stuff you need to know about R, besides data analysis. by Jennifer Bryan, Jennifer Bryan, Jim Hester, Shannon Pileggi, E. David Aja https://rstats.wtf/ 
+
+-   Happy Git with R for the UseR by Jennifer Bryan, https://happygitwithr.com/
+
+## Data/Codes relevant to the Challenge
+
+- Most information relevant to the challenge are available in the following resources. Most of the examples are already available in R/Quarto. 
+- https://localfoodeconomics.com/data/access-the-data/
+- https://allison-bauman.quarto.pub/usda-ams-datametrics/
+- https://github.com/FoodSystemsModeling/DataWarehouse
+
+
+## Useful Packages for Geospatial Analysis
+
+-   `sf`
+-   `terra`
+-   `tmap`
+-   `tidycensus`
+
+## Useful DataViz Galleries
+
+## Tools for Interactive Visualizations
+
+## Accessibility Concerns
+
+-   508 Compliance of Data Visualization
+-   Accessible Color Themes
+
+## Quarto Resources
+- This revealjs slide deck is created using Quarto.
+
+
+## Acknowledgements
+
+- Clay Karnis helped me with some of the visualizations. 
+- Ivy Mackereth shared her experience from the previous competition.
+- I thank organizers of the webinar for inviting me to share my experience.
+- Thanks everyone for listening, and good luck!
+
+# Any Questions?
+

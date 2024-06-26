@@ -1,0 +1,50 @@
+---
+title: "State Food Insecurity Rates"
+format: html
+params:
+  state: "OH"
+  year: 2021
+---
+
+```{r setup, include=FALSE}
+# Load necessary libraries
+library("tidyverse")
+library("sf")
+library("tigris")
+library("knitr")
+
+```
+
+
+```{r}
+#| output: false
+#| echo: false
+
+
+df<-read_csv("../0_data/local_food_economics/mydata.csv")
+
+# county level maps
+df_states<-df |>
+  filter(as.numeric(fips)>1000 & year == params$year & state_name!="US")|>
+  filter(variable_name == "overall_food_insecurity_rate")
+wv_counties <- counties(state=params$state)|>
+  left_join(df_states, by = join_by(GEOID==fips))
+```
+
+
+
+```{r}
+#| label: fig-us-states-food-insecurity
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+# plot the map
+ggplot(wv_counties, aes(fill=value))+
+  geom_sf()+
+  scale_fill_viridis_c()+
+  labs(title= paste0("Food Insecurity Rate in ", params$state, " in ",  params$year), fill="Rate")+
+  theme_minimal()
+
+```
