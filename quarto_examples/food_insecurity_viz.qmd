@@ -12,7 +12,7 @@ library("tidyverse")
 library("sf")
 library("tigris")
 
-df<-read_csv("../0_data/food_insecurity_dataviz.csv")
+df<-read_csv("../data/food_insecurity_dataviz.csv")
 
 # county level maps
 df_states<-df |>

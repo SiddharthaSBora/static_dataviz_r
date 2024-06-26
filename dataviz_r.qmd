@@ -2,8 +2,7 @@
 title: "Basic Data Visualization in R"
 title-short: "R DataViz"
 author: 
-   - "Siddhartha Bora"
-   - "Assistant Professor, West Virginia University"
+   - "Siddhartha Bora, Assistant Professor, West Virginia University"
 date: "June 26, 2024"
 date-format: long
 format: 
@@ -19,27 +18,23 @@ format:
 
 
 
-## Slide 2
+## Outline
 
-## Slide 3
+- Some thoughts on data wrangling
+- An introduction to the workflow of data visualization in R.
+- Visualization examples.
+- A basic introduction to Quarto
 
-## Slide 4
-
-## Slide 5
 
 ## Disclaimers
 
 -   The content of this presentation is based on the author's experience and knowledge of R, and represent an opinionated view of data visualizations.
--   R is vast and the content of this presentation is not exhaustive of all the data visualization features available in R. The author recognize that there are many other ways to visualize data in R.
--   The contents of this presentation are tailored to create static data visualizations for a competition.
+-   R is vast and the content of this presentation is not exhaustive of all the data visualization features available in R. The author recognizes that there are many other ways to visualize data in R.
+-   The contents of this presentation are tailored to create static data visualizations for the competition.
 -   The views and opinions expressed in this presentation are those of the author and do not necessarily reflect the official policy or position of any other agency, organization, employer or company.
 
 
-## Data Preprocessing takes most of the time
 
--   Data wrangling is the process of cleaning and transforming raw data into a format that is more suitable for analysis and visualization.
--   Data wrangling is often the most time-consuming part of the data analysis process.
--   The `tidyverse` package in R provides a set of tools for data wrangling that are designed to work together.
 
 ## Tidy Data Principles
 
@@ -47,23 +42,41 @@ format:
 2.  Each observation is a row; each row is an observation.
 3.  Each value is a cell; each cell is a single value.
 
-Source: https://r4ds.hadley.nz/data-tidy
+Source: [R for Data Science (2e), Hadley Wickham, Mine Cetinkaya-Rundel, Garret Golemund](https://r4ds.hadley.nz/data-tidy)
 
 ## Long vs Wide Data
 
--   Long data is better for visualization
--   Wide data is better for analysis
--   Use `pivot_longer` and `pivot_wider` functions in the `tidyverse` to convert data between long and wide formats
+-   Long form
+```{r}
+library(tidyverse)
+# long data small example
+df_long<-tibble(
+  student_id=c(1,1, 1, 2, 2,2),
+  subject=c("english","math","science", "english","math","science"),
+  test_score=c(70, 87, 100,  78, 65, 83)
+)
+df_long
+```
 
-## Long Data Example
+-   Wide form
 
-## Wide Data Example
+```{r}
+# convert long data to wide data
+df_wide<-df_long |> 
+  pivot_wider(names_from = subject, values_from = test_score)
 
-## Data Wrangling
+df_wide
+```
+-   Useful functions: `pivot_longer` and `pivot_wider` in the `tidyverse` 
+- long data is typically useful for visualization.
 
-- I am using a fraction of the data from the Local Food Economics Warehouse
-- The data is about food insecurity in the United States
-- 
+## Data Preprocessing takes most of the time
+
+-   Data wrangling is the process of cleaning and transforming raw data into a format that is more suitable for analysis and visualization.
+-   Data wrangling is often the most time-consuming part of the data analysis process.
+-   The `tidyverse` package in R provides a set of tools for data wrangling that are designed to work together.
+-  I am using a fraction of the data from the Local Food Economics Warehouse.
+
 
 ## Data Wrangling 
 
@@ -88,7 +101,6 @@ mydata<-df_foodaccess |>
 
 # write data into a csv
 write_csv(mydata, "./data/food_insecurity_dataviz.csv")
-
 
 ```
 
@@ -131,13 +143,19 @@ metadata<-meta_foodaccess |>
   kable()|>
   kable_styling("striped", full_width = F)
 
+metadata
+
 ```
 :::
 
+## Layered Grammar of Graphics
+
+"All plots are composed of the data, the information you want to visualise, and a mapping, the description of how the data’s variables are mapped to aesthetic attributes."
+
+-   Mapping components: layers (geoms and stats), scales, coords, facets,and themes.
 
 
-## Grammar of Graphics
-
+Source: [ggplot2: Elegant Graphics for Data Analysis (3e), Hadley Wickham, Mine Cetinkaya-Rundel, Garret Golemund] (https://ggplot2-book.org/introduction)
 
 ## Example: Food Insecurity in West Virginia
 
@@ -156,10 +174,12 @@ df_wv <- df_foodsecurity |>
                                      "child_food_insecurity_rate"),
          value = 100*value)
 
-# line plot
+# examine data
 head(df_wv)
 
 ```
+
+I try to subset data for West Virginia.
 
 #### Output
 
@@ -176,7 +196,6 @@ df_wv <- df_foodsecurity |>
                                      "child_food_insecurity_rate"),
          value = 100*value)
 
-# line plot
 head(df_wv)
 
 ```
@@ -223,7 +242,6 @@ Let's try plotting both variables
 
 # create line plot for two variables
 df_wv |>
-  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
   ggplot(aes(x = year, y = value, color = variable_name)) +  
   geom_line()
 
@@ -245,7 +263,6 @@ Let's try doing barplots.
 #| fig-height: 3
 # create barchart for two variables 
 df_wv |>
-  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
   ggplot(aes(x = year, y = value, fill = variable_name)) +  
   geom_col(position = "dodge")
 
@@ -567,14 +584,14 @@ plot_food_insecurity_state("51")
 #| output-location: fragment
 #| tidy: true
 #| tidy.opts: { width.cutoff: 60 }
-#| fig-height: 3
+#| fig-height: 5
 # Arranging plots in a grid
 library("gridExtra")
 plot_wv<-plot_food_insecurity_state("54")
 plot_va<-plot_food_insecurity_state("51")
 
 # grid arrange and merge legends
-grid.arrange(plot_wv, plot_va, ncol=2, top = "Food Insecurity Rates in West Virginia and Virginia")
+grid.arrange(plot_wv, plot_va, ncol=2)
 
 ```
 
@@ -733,7 +750,7 @@ plot_state_map<-function(df, state_name, variable_name, year){
     theme_minimal()
 }
 
-plot_state_map(df_foodinsecurity, "Ohio", "overall_food_insecurity_rate", 2015)
+plot_state_map(df_foodinsecurity, "Ohio", "child_food_insecurity_rate", 2021)
 
 ```
 
@@ -834,7 +851,7 @@ Useful packages:
 - [The Python Graph Gallery](https://python-graph-gallery.com/)
 
 
-## Additional Resources:: Tools for Interactive Visualizations
+## Additional Resources: Tools for Interactive Visualizations
 
 - [The R Graph Gallery](https://r-graph-gallery.com/interactive-charts.html)
 
@@ -855,6 +872,8 @@ Useful packages:
 - [Quarto Guide](https://quarto.org/docs/guide/)
 
 - [Quarto Tutorial](https://quarto.org/docs/get-started/hello/rstudio.html)
+
+
 
 ## Acknowledgements
 
