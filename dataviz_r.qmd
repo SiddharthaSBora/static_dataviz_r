@@ -313,6 +313,8 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 
 ## Useful DataViz Galleries
 
+- Put things where there are good example dataviz to get inspiration.
+
 ## Tools for Interactive Visualizations
 
 ## Accessibility Concerns
