@@ -506,10 +506,45 @@ plot_1
 #### Code
 
 ```{r}
-#| label: chunk1
+#| label: facet-chunk1
 #| echo: true
 #| eval: false
 #| warning: false
+
+# let's make graphs for both OH and WV
+df_oh_wv <- df_foodsecurity |> 
+  filter(fips %in% c("39","54")) |>
+  # variable name factor relevel
+  mutate(variable_name = fct_relevel(variable_name, "overall_food_insecurity_rate", 
+                                     "child_food_insecurity_rate"),
+         value = 100*value)
+
+# treat the plot as an object
+plot_3 <- df_oh_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")+
+  labs(title="Food Insecurity Rates in the Ohio and West Virginia", x="", y="%")+
+  # break each year
+  scale_x_continuous(breaks = seq(2011, 2021, 1))+
+  # add value labels
+  geom_text(aes(label = paste0(round(value, 1), "%")), 
+            position = position_dodge(width = 1), 
+            vjust = -0.5, size = 3)+
+  # legend labels and name
+  scale_fill_discrete(name = "", labels = c("Overall", "Child"))+
+  theme_minimal()+
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  facet_wrap(~state_name)
+
+plot_3
 
 
 ```
@@ -517,12 +552,45 @@ plot_1
 #### Output
 
 ```{r}
-#| label: chunk2
+#| label: facet-chunk2
 #| echo: false
 #| eval: true
 #| warning: false
 
+# let's make graphs for both OH and WV
+df_oh_wv <- df_foodsecurity |> 
+  filter(fips %in% c("39","54")) |>
+  # variable name factor relevel
+  mutate(variable_name = fct_relevel(variable_name, "overall_food_insecurity_rate", 
+                                     "child_food_insecurity_rate"),
+         value = 100*value)
 
+# treat the plot as an object
+plot_3 <- df_oh_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")+
+  labs(title="Food Insecurity Rates in the Ohio and West Virginia", x="", y="%")+
+  # break each year
+  scale_x_continuous(breaks = seq(2011, 2021, 1))+
+  # add value labels
+  geom_text(aes(label = paste0(round(value, 1), "%")), 
+            position = position_dodge(width = 1), 
+            vjust = -0.5, size = 3)+
+  # legend labels and name
+  scale_fill_discrete(name = "", labels = c("Overall", "Child"))+
+  theme_minimal()+
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  facet_wrap(~state_name)
+
+plot_3
 ```
 :::
 
@@ -533,10 +601,54 @@ plot_1
 #### Code
 
 ```{r}
-#| label: chunk1
+#| label: barplot-functions-chunk1
 #| echo: true
 #| eval: false
 #| warning: false
+
+# Make a function to create the plot for any state
+plot_food_insecurity_state <- function(state_fips){
+  df_state <- df_foodsecurity |> 
+    filter(fips == state_fips) |>
+    # variable name factor relevel
+    mutate(variable_name = fct_relevel(variable_name, "overall_food_insecurity_rate", 
+                                       "child_food_insecurity_rate"))
+  
+  state_name <- df_state |>
+    pull(state_name) |>
+    unique()
+  
+  # treat the plot as an object
+  plot_state <- df_state |>
+    filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+    ggplot(aes(x = year, y = 100*value, fill = variable_name)) +  
+    geom_col(position = "dodge")+
+    labs(title=paste("Food Insecurity Rates in", state_name), x="", y="%")+
+    # break each year
+    scale_x_continuous(breaks = seq(2011, 2021, 1))+
+    ylim(0, 40)+
+    # add value labels
+    geom_text(aes(label = paste0(round(100*value, 1), "%")), 
+              position = position_dodge(width = 1), 
+              vjust = -0.5, size = 3)+
+    # legend labels and name
+    scale_fill_discrete(name = "", labels = c("Overall", "Child"))+
+    theme_minimal()+
+    theme(legend.position = "bottom",
+          legend.title = element_text(size = 12),
+          legend.text = element_text(size = 10),
+          plot.title = element_text(size = 14, hjust = 0.5),
+          axis.title = element_text(size = 12),
+          axis.text = element_text(size = 10),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+  
+  return(plot_state)
+}
+  
+
+# Let's try for Virginia
+plot_food_insecurity_state("51")
 
 
 ```
@@ -544,12 +656,54 @@ plot_1
 #### Output
 
 ```{r}
-#| label: chunk2
+#| label: barplot-functions-chunk2
 #| echo: false
 #| eval: true
 #| warning: false
 
+# Make a function to create the plot for any state
+plot_food_insecurity_state <- function(state_fips){
+  df_state <- df_foodsecurity |> 
+    filter(fips == state_fips) |>
+    # variable name factor relevel
+    mutate(variable_name = fct_relevel(variable_name, "overall_food_insecurity_rate", 
+                                       "child_food_insecurity_rate"))
+  
+  state_name <- df_state |>
+    pull(state_name) |>
+    unique()
+  
+  # treat the plot as an object
+  plot_state <- df_state |>
+    filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+    ggplot(aes(x = year, y = 100*value, fill = variable_name)) +  
+    geom_col(position = "dodge")+
+    labs(title=paste("Food Insecurity Rates in", state_name), x="", y="%")+
+    # break each year
+    scale_x_continuous(breaks = seq(2011, 2021, 1))+
+    ylim(0, 40)+
+    # add value labels
+    geom_text(aes(label = paste0(round(100*value, 1), "%")), 
+              position = position_dodge(width = 1), 
+              vjust = -0.5, size = 3)+
+    # legend labels and name
+    scale_fill_discrete(name = "", labels = c("Overall", "Child"))+
+    theme_minimal()+
+    theme(legend.position = "bottom",
+          legend.title = element_text(size = 12),
+          legend.text = element_text(size = 10),
+          plot.title = element_text(size = 14, hjust = 0.5),
+          axis.title = element_text(size = 12),
+          axis.text = element_text(size = 10),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank())
+  
+  return(plot_state)
+}
+  
 
+# Let's try for Virginia
+plot_food_insecurity_state("51")
 ```
 :::
 
@@ -560,51 +714,39 @@ plot_1
 #### Code
 
 ```{r}
-#| label: chunk1
+#| label: arrange-chunk1
 #| echo: true
 #| eval: false
 #| warning: false
+# Arranging plots in a grid
+library("gridExtra")
+plot_wv<-plot_food_insecurity_state("54")
+plot_va<-plot_food_insecurity_state("51")
 
+# grid arrange and merge legends
+grid.arrange(plot_wv, plot_va, ncol=2, top = "Food Insecurity Rates in West Virginia and Virginia")
 
 ```
 
 #### Output
 
 ```{r}
-#| label: chunk2
+#| label: arrange-chunk2
 #| echo: false
 #| eval: true
 #| warning: false
+# Arranging plots in a grid
+library("gridExtra")
+plot_wv<-plot_food_insecurity_state("54")
+plot_va<-plot_food_insecurity_state("51")
 
+# grid arrange and merge legends
+grid.arrange(plot_wv, plot_va, ncol=2, top = "Food Insecurity Rates in West Virginia and Virginia")
 
 ```
 :::
 
-## Code Example
 
-::: panel-tabset
-#### Code
-
-```{r}
-#| label: chunk1
-#| echo: true
-#| eval: false
-#| warning: false
-
-
-```
-
-#### Output
-
-```{r}
-#| label: chunk2
-#| echo: false
-#| eval: true
-#| warning: false
-
-
-```
-:::
 
 # Different Types of Plots
 
@@ -617,19 +759,8 @@ plot_1
 -   Heatmap
 -   Map
 
-## Slide 2
 
-## Slide 3
 
-## Slide 4
-
-## Arranging Plots
-
-## Treat the Plots as Objects
-
-## Reusing Code as Functions
-
-## 
 
 ## Tools for creating maps in R
 
@@ -640,6 +771,9 @@ plot_1
     -   leaflet
     -   mapview
     -   sf
+    
+    
+
 
 ## Example 1: Prepare the Data for Map
 
@@ -701,15 +835,85 @@ ggplot(states, aes(fill=value))+
 ```
 :::
 
-## Slide 3
+## County Level Map of West Virginia
 
-## Slide 4
+::: panel-tabset
+#### Code
 
-## Slide 5
+```{r}
+#| label: wvmap-chunk1
+#| echo: true
+#| eval: false
+#| warning: false
 
-## Create a functions for any state
 
-## 
+```
+
+#### Output
+
+```{r}
+#| label: wvmap-chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+:::
+
+
+## Generalize using a function and make Ohio map
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: wvmap-chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+
+```
+
+#### Output
+
+```{r}
+#| label: wvmap-chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+:::
+
+## Code Example
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+
+```
+
+#### Output
+
+```{r}
+#| label: chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+:::
+
 
 # Infographics using Quarto
 
@@ -729,7 +933,6 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 
 ## Example: Parameterized Infographics
 
-## Taking a bit further: Adding a UI using Shiny
 
 # Additional Resources on Diverse Topics
 
@@ -797,7 +1000,7 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 ## Quarto Resources
 
 
-- This revealjs slide deck is created using Quarto.
+- This revealjs slide deck is created using Quarto, and the .qmd file is available.
 
 - [Quarto Guide](https://quarto.org/docs/guide/)
 

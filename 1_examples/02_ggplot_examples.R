@@ -120,7 +120,7 @@ plot_2 <- df_oh |>
 
 
 # faceting by states
-# let's make graphs for both US and WV
+# let's make graphs for both OH and WV
 df_oh_wv <- df_foodsecurity |> 
   filter(fips %in% c("39","54")) |>
   # variable name factor relevel
@@ -153,10 +153,12 @@ plot_3 <- df_oh_wv |>
         panel.grid.minor = element_blank())+
   facet_wrap(~state_name)
 
+plot_3
+
 
 
 # Make a function to create the plot for any state
-plot_state <- function(state_fips){
+plot_food_insecurity_state <- function(state_fips){
   df_state <- df_foodsecurity |> 
     filter(fips == state_fips) |>
     # variable name factor relevel
@@ -204,9 +206,8 @@ plot_state("39")
 
 # Arranging plots in a grid
 library("gridExtra")
-plot_wv<-plot_state("54")
-
-plot_va<-plot_state("51")
+plot_wv<-plot_food_insecurity_state("54")
+plot_va<-plot_food_insecurity_state("51")
 
 # grid arrange and merge legends
 grid.arrange(plot_wv, plot_va, ncol=2, top = "Food Insecurity Rates in West Virginia and Virginia")
