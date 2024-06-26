@@ -1,6 +1,6 @@
 ---
 title: "Food Insecurity"
-format: pdf
+format: html
 ---
 
 ```{r}
@@ -10,7 +10,7 @@ library("tidyverse")
 library("sf")
 library("tigris")
 
-df<-read_csv("../0_data/local_food_economics/mydata.csv")
+df<-read_csv("../0_data/food_insecurity_dataviz.csv")
 
 # county level maps
 df_states<-df |>
@@ -25,7 +25,7 @@ wv_counties <- counties(state="WV")|>
 #| echo: false
 #| eval: true
 #| warning: false
-#| fig-cap: "US Food Insecurity Rate"
+#| fig-cap: "County Level Food Insecurity Rates, West Virginia"
 
 # plot the map
 ggplot(wv_counties, aes(fill=value))+

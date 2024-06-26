@@ -1,6 +1,5 @@
 ---
-title: "Data Visualization in R"
-subtitle: "Infographics using Quarto"
+title: "Basic Data Visualization in R"
 title-short: "R DataViz"
 author: 
    - "Siddhartha Bora"
@@ -76,6 +75,7 @@ Source: https://r4ds.hadley.nz/data-tidy
 #| warning: false
 
 library("tidyverse")
+
 
 # load the data
 df_foodaccess<-read_csv("./0_data/df_foodaccess.csv")
@@ -466,7 +466,7 @@ plot_1
 #### Output
 
 ```{r}
-#| label: improvethem-chunk2
+#| label: improvetheme-chunk2
 #| echo: false
 #| eval: true
 #| warning: false
@@ -741,7 +741,7 @@ plot_wv<-plot_food_insecurity_state("54")
 plot_va<-plot_food_insecurity_state("51")
 
 # grid arrange and merge legends
-grid.arrange(plot_wv, plot_va, ncol=2, top = "Food Insecurity Rates in West Virginia and Virginia")
+grid.arrange(plot_wv, plot_va, ncol=2)
 
 ```
 :::
@@ -775,19 +775,25 @@ grid.arrange(plot_wv, plot_va, ncol=2, top = "Food Insecurity Rates in West Virg
     
 
 
-## Example 1: Prepare the Data for Map
+## Map Example 1: State Level Food Insecurity Rate
+
+Prepare data for plotting the map.
 
 ```{r}
 #| output: false
 #| echo: true
+
+
 library("tidyverse")
 library("sf")
-library("ggplot2")
-df<-read_csv("./0_data/food_insecurity_dataviz.csv")
+library("tigris")
+library("kableExtra")
+
+df_foodinsecurity<-read_csv("./0_data/food_insecurity_dataviz.csv")
 
 # let's plot a map
-df_states<-df |>
-  filter(as.numeric(fips)<=56 & year ==2015 & state_name!="US")|>
+df_states<-df_foodinsecurity |>
+  filter(as.numeric(fips)<=56 & year ==2021 & state_name!="US")|>
   filter(variable_name == "overall_food_insecurity_rate")
 
 
@@ -823,7 +829,7 @@ ggplot(states, aes(fill=value))+
 #| echo: false
 #| eval: true
 #| warning: false
-#| fig-cap: "US Food Insecurity Rate"
+#| fig-cap: "Overall Food Insecurity Rate, US States, 2021"
 
 # plot the map
 ggplot(states, aes(fill=value))+
@@ -868,7 +874,7 @@ ggplot(states, aes(fill=value))+
 #### Code
 
 ```{r}
-#| label: wvmap-chunk1
+#| label: ohiomap-chunk1
 #| echo: true
 #| eval: false
 #| warning: false
@@ -879,7 +885,7 @@ ggplot(states, aes(fill=value))+
 #### Output
 
 ```{r}
-#| label: wvmap-chunk2
+#| label: ohiomap-chunk2
 #| echo: false
 #| eval: true
 #| warning: false
