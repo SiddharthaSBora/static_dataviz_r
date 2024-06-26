@@ -489,7 +489,7 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 - [R CHARTS by R CODER](https://r-charts.com/)
 
 - [The Python Graph Gallery](https://python-graph-gallery.com/)
->>>>>>> b15ea556baea9cc5d32eca78b981103aea6780b5
+
 
 ## Tools for Interactive Visualizations
 
@@ -519,7 +519,7 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 
 - [Learn R Markdown](https://pkgs.rstudio.com/rmarkdown/articles/rmarkdown.html)
 
->>>>>>> b15ea556baea9cc5d32eca78b981103aea6780b5
+
 
 ## Acknowledgements
 
