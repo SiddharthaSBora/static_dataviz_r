@@ -1,6 +1,8 @@
 ---
 title: "State Food Insecurity Rates"
-format: html
+format: 
+  html:
+    embed-resources: true
 params:
   state: "OH"
   year: 2021
@@ -21,7 +23,7 @@ library("knitr")
 #| echo: false
 
 
-df<-read_csv("../0_data/local_food_economics/mydata.csv")
+df<-read_csv("../0_data/food_insecurity_dataviz.csv")
 
 # county level maps
 df_states<-df |>
