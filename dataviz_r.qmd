@@ -467,11 +467,41 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 -   `tmap`
 -   `tidycensus`
 
+## Useful DataViz Books
+
+- [ggplot2: Elegant Graphics for Data Analysis (3e) was written by Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen.](https://ggplot2-book.org/)
+
+- [Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 1: Basics : Oct 25, 2018 • Mel Moreno and Mathieu Basille](https://r-spatial.org/r/2018/10/25/ggplot2-sf.html)
+
+- [R for Data Science (2e) was written by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.](https://r4ds.hadley.nz/)
+
+- [Modern Data Visualization with R by Robert Kabacoff](https://rkabacoff.github.io/datavis/)
+
 ## Useful DataViz Galleries
 
--   Put things where there are good example dataviz to get inspiration.
+
+- [The R Graph Gallery](https://r-graph-gallery.com/)
+
+- [ggplot2 extensions - gallery](https://exts.ggplot2.tidyverse.org/gallery/)
+
+- [R Gallery Book by Kyle W. Brown](https://bookdown.org/content/b298e479-b1ab-49fa-b83d-a57c2b034d49/distributions.html#violin)
+
+- [R CHARTS by R CODER](https://r-charts.com/)
+
+- [The Python Graph Gallery](https://python-graph-gallery.com/)
+>>>>>>> b15ea556baea9cc5d32eca78b981103aea6780b5
 
 ## Tools for Interactive Visualizations
+
+- [The R Graph Gallery](https://r-graph-gallery.com/interactive-charts.html)
+
+- [Interactive web-based data visualization with R, plotly, and shiny by Carson Sievert](https://plotly-r.com/)
+
+- [Modern Data Visualization with R by Robert Kabacoff (Chapter 13)](https://rkabacoff.github.io/datavis/)
+
+- [Interactive visualization in R by Rebecca Barter](https://rebeccabarter.com/blog/2017-04-20-interactive)
+
+- [Mastering Shiny by Hadley Wickham](https://mastering-shiny.org/)
 
 ## Accessibility Concerns
 
@@ -480,7 +510,16 @@ Let's see an example of how you can create a parameterized infographic in Quarto
 
 ## Quarto Resources
 
--   This revealjs slide deck is created using Quarto.
+
+- This revealjs slide deck is created using Quarto.
+
+- [Quarto Guide](https://quarto.org/docs/guide/)
+
+- [Quarto Tutorial](https://quarto.org/docs/get-started/hello/rstudio.html)
+
+- [Learn R Markdown](https://pkgs.rstudio.com/rmarkdown/articles/rmarkdown.html)
+
+>>>>>>> b15ea556baea9cc5d32eca78b981103aea6780b5
 
 ## Acknowledgements
 
