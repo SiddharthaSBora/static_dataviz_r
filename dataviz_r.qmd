@@ -279,6 +279,13 @@ Let's try doing barplots.
 #| eval: false
 #| warning: false
 
+# create barchart for two variables 
+df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")
+
+
 ```
 
 #### Output
@@ -289,11 +296,289 @@ Let's try doing barplots.
 #| eval: true
 #| warning: false
 
+# create barchart for two variables 
+df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")
 
 ```
 :::
 
 
+## Improving the Plot
+-- I decided to make a barplot.
+-- The plot works, but needs some improvement.
+-- Improvements can take many forms, such as:
+    - Adding labels
+    - Adding title
+    - Adding subtitle
+    - Adding caption
+    - Changing the color scheme
+    - Changing the theme
+    
+-- I will try to improve it layer by layer
+
+## Treat the Plot as an Object
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: object-chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+# treat the plot as an object
+plot_1 <- df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")
+
+plot_1<- plot_1+
+  labs(title="Food Insecurity Rate in West Virginia", x="Year", y="%")+
+  theme_minimal()
+
+plot_1
+
+```
+
+#### Output
+
+```{r}
+#| label: object-chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+# treat the plot as an object
+plot_1 <- df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")
+
+plot_1<- plot_1+
+  labs(title="Food Insecurity Rate in West Virginia", x="Year", y="%")+
+  theme_minimal()
+
+plot_1
+
+
+```
+:::
+
+
+## Further Improvements
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: labels-chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+plot_1 <- df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")+
+  labs(title="Food Insecurity Rates in West Virginia", x="", y="%")+
+  # break each year
+  scale_x_continuous(breaks = seq(2011, 2021, 1))+
+  # add value labels
+  geom_text(aes(label = paste0(round(value, 1), "%")), 
+            position = position_dodge(width = 1), 
+            vjust = -0.5, size = 3)+
+  # legend labels and name
+  scale_fill_discrete(name = "", labels = c("Overall", "Child"))
+
+plot_1
+```
+
+#### Output
+
+```{r}
+#| label: labels-chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+plot_1 <- df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")+
+  labs(title="Food Insecurity Rates in West Virginia", x="", y="%")+
+  # break each year
+  scale_x_continuous(breaks = seq(2011, 2021, 1))+
+  # add value labels
+  geom_text(aes(label = paste0(round(value, 1), "%")), 
+            position = position_dodge(width = 1), 
+            vjust = -0.5, size = 3)+
+  # legend labels and name
+  scale_fill_discrete(name = "", labels = c("Overall", "Child"))
+
+plot_1
+
+```
+:::
+
+
+## Improve theme
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: improvetheme-chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+plot_1 <- df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")+
+  labs(title="Food Insecurity Rates in West Virginia", x="", y="%")+
+  # break each year
+  scale_x_continuous(breaks = seq(2011, 2021, 1))+
+  # add value labels
+  geom_text(aes(label = paste0(round(value, 1), "%")), 
+            position = position_dodge(width = 1), 
+            vjust = -0.5, size = 3)+
+  # legend labels and name
+  scale_fill_discrete(name = "", labels = c("Overall", "Child"))+
+  theme_minimal()+
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+plot_1
+
+```
+
+#### Output
+
+```{r}
+#| label: improvethem-chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+plot_1 <- df_wv |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate")) |>
+  ggplot(aes(x = year, y = value, fill = variable_name)) +  
+  geom_col(position = "dodge")+
+  labs(title="Food Insecurity Rates in West Virginia", x="", y="%")+
+  # break each year
+  scale_x_continuous(breaks = seq(2011, 2021, 1))+
+  # add value labels
+  geom_text(aes(label = paste0(round(value, 1), "%")), 
+            position = position_dodge(width = 1), 
+            vjust = -0.5, size = 3)+
+  # legend labels and name
+  scale_fill_discrete(name = "", labels = c("Overall", "Child"))+
+  theme_minimal()+
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 10),
+        plot.title = element_text(size = 14, hjust = 0.5),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+plot_1
+
+```
+:::
+
+## Faceting 
+
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+
+```
+
+#### Output
+
+```{r}
+#| label: chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+:::
+
+
+## Reusing Code as functions
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+
+```
+
+#### Output
+
+```{r}
+#| label: chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+:::
+
+
+## Arranging Plots
+
+::: panel-tabset
+#### Code
+
+```{r}
+#| label: chunk1
+#| echo: true
+#| eval: false
+#| warning: false
+
+
+```
+
+#### Output
+
+```{r}
+#| label: chunk2
+#| echo: false
+#| eval: true
+#| warning: false
+
+
+```
+:::
 
 ## Code Example
 
@@ -305,6 +590,7 @@ Let's try doing barplots.
 #| echo: true
 #| eval: false
 #| warning: false
+
 
 ```
 

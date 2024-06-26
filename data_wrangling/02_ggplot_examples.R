@@ -86,7 +86,7 @@ plot_1 <- df_wv |>
 
 plot_1
 
-# Now I want to make plot for West Virginia
+# Now I want to make plot for Ohio
 df_oh <- df_foodsecurity |> 
   filter(fips == "39") |>
   # variable name factor relevel
