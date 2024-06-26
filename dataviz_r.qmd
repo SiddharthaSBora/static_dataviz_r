@@ -17,7 +17,7 @@ format:
     scrollable: true
 ---
 
-# Background
+
 
 ## Slide 2
 
@@ -34,7 +34,6 @@ format:
 -   The contents of this presentation are tailored to create static data visualizations for a competition.
 -   The views and opinions expressed in this presentation are those of the author and do not necessarily reflect the official policy or position of any other agency, organization, employer or company.
 
-# Wrangling Data Prior to Visualization
 
 ## Data Preprocessing takes most of the time
 
@@ -60,11 +59,13 @@ Source: https://r4ds.hadley.nz/data-tidy
 
 ## Wide Data Example
 
-## Data Wrangling for this presentation
+## Data Wrangling
 
 - I am using a fraction of the data from the Local Food Economics Warehouse
+- The data is about food insecurity in the United States
+- 
 
-## Data Wrangling for this presentation
+## Data Wrangling 
 
 ::: panel-tabset
 #### Code
@@ -75,26 +76,23 @@ Source: https://r4ds.hadley.nz/data-tidy
 #| warning: false
 
 library("tidyverse")
-
+library("kableExtra")
 
 # load the data
-df_foodaccess<-read_csv("./0_data/df_foodaccess.csv")
-meta_foodaccess<-read_csv("./0_data/meta_foodaccess.csv")
+df_foodaccess<-read_csv("./data/df_foodaccess.csv")
+meta_foodaccess<-read_csv("./data/meta_foodaccess.csv")
 
 # let's keep only overall_food_insecurity_rate and child_food_insecurity_rate
 mydata<-df_foodaccess |>
   filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate"))
 
-# inspect first 10 rows
-head(mydata, 10)
-
 # write data into a csv
-write_csv(mydata, "./0_data/food_insecurity_dataviz.csv")
+write_csv(mydata, "./data/food_insecurity_dataviz.csv")
 
 
 ```
 
-#### Output
+#### Metadata
 
 ```{r}
 #| label: cleaned-dataset
@@ -104,10 +102,11 @@ write_csv(mydata, "./0_data/food_insecurity_dataviz.csv")
 
 
 library("tidyverse")
+library("kableExtra")
 
 # load the data
-df_foodaccess<-read_csv("./0_data/df_foodaccess.csv")
-meta_foodaccess<-read_csv("./0_data/meta_foodaccess.csv")
+df_foodaccess<-read_csv("./data/df_foodaccess.csv")
+meta_foodaccess<-read_csv("./data/meta_foodaccess.csv")
 
 # let's keep only overall_food_insecurity_rate and child_food_insecurity_rate
 df_foodsecurity<-df_foodaccess |>
@@ -119,20 +118,23 @@ meta_foodsecurity<-meta_foodaccess |>
                               "child_food_insecurity_rate")
          )
 
-# inspect first 10 rows
-head(df_foodsecurity, 10)
-
-head(meta_foodsecurity)
-
 # write data into a csv
-write_csv(df_foodsecurity, "./0_data/food_insecurity_dataviz.csv")
+write_csv(df_foodsecurity, "./data/food_insecurity_dataviz.csv")
 
-
+# metadata
+metadata<-meta_foodaccess |>
+  filter(variable_name %in% c("overall_food_insecurity_rate", "child_food_insecurity_rate"))|>
+  select(user_friendly_variable_name,
+         variable_definition,
+         source,
+         citation) |>
+  kable()|>
+  kable_styling("striped", full_width = F)
 
 ```
 :::
 
-# Data Visualization using ggplot2/Grammar of Graphics
+
 
 ## Grammar of Graphics
 
@@ -182,47 +184,27 @@ head(df_wv)
 
 ## Example: Food Insecurity in WV
 
-::: panel-tabset
-#### Code
 
+I try to draw a basic lineplot.
 ```{r}
 #| label: basic-lineplot-chunk1
 #| echo: true
 #| eval: true
 #| warning: false
-#| output-location: column-fragment
+#| output-location: fragment
 #| tidy: true
 #| tidy.opts: { width.cutoff: 60 }
-
-
-# line plot
-df_wv |>
-  filter(variable_name == "overall_food_insecurity_rate") |>
-  ggplot(aes(x = year, y = value)) +  
-  geom_line()
-
-
-```
-I try to draw a basic lineplot.
-
-#### Output
-
-```{r}
-#| label: basic-lineplot-chunk2
-#| echo: false
-#| eval: true
-#| warning: false
 #| fig-height: 3
-# Subset data for WV
+
+
 # line plot
 df_wv |>
   filter(variable_name == "overall_food_insecurity_rate") |>
   ggplot(aes(x = year, y = value)) +  
   geom_line()
 
+
 ```
-The plot works, but it is hardly readable.
-:::
 
 
 ## Example: Food Insecurity in WV
@@ -789,7 +771,7 @@ library("sf")
 library("tigris")
 library("kableExtra")
 
-df_foodinsecurity<-read_csv("./0_data/food_insecurity_dataviz.csv")
+df_foodinsecurity<-read_csv("./data/food_insecurity_dataviz.csv")
 
 # let's plot a map
 df_states<-df_foodinsecurity |>
@@ -980,22 +962,22 @@ plot_state_map(df_foodinsecurity, "Ohio", "child_food_insecurity_rate", 2021)
 - Let's see an example of how you can create a parameterized infographic in Quarto.
 
 
-# Additional Resources on Diverse Topics
 
-## R Workflow Related Resources
+
+## Additional Resources: R Workflow Related Resources
 
 -   What They Forgot to Teach You About R: The stuff you need to know about R, besides data analysis. by Jennifer Bryan, Jennifer Bryan, Jim Hester, Shannon Pileggi, E. David Aja https://rstats.wtf/
 
 -   Happy Git with R for the UseR by Jennifer Bryan, https://happygitwithr.com/
 
-## Data/Codes relevant to the Challenge
+## Additional Resources:: Data/Codes relevant to the Challenge
 
 -   Most information relevant to the challenge are available in the following resources. Most of the examples are already available in R/Quarto.
 -   https://localfoodeconomics.com/data/access-the-data/
 -   https://allison-bauman.quarto.pub/usda-ams-datametrics/
 -   https://github.com/FoodSystemsModeling/DataWarehouse
 
-## Useful Packages for Geospatial Analysis
+## Additional Resources:: Useful Packages for Geospatial Analysis
 
 -   `sf`
 -   `terra`
@@ -1026,7 +1008,7 @@ plot_state_map(df_foodinsecurity, "Ohio", "child_food_insecurity_rate", 2021)
 - [The Python Graph Gallery](https://python-graph-gallery.com/)
 
 
-## Tools for Interactive Visualizations
+## Additional Resources:: Tools for Interactive Visualizations
 
 - [The R Graph Gallery](https://r-graph-gallery.com/interactive-charts.html)
 
@@ -1043,7 +1025,7 @@ plot_state_map(df_foodinsecurity, "Ohio", "child_food_insecurity_rate", 2021)
 -   508 Compliance of Data Visualization
 -   Accessible Color Themes
 
-## Quarto Resources
+## Additional Resources: Quarto
 
 
 - This revealjs slide deck is created using Quarto, and the .qmd file is available.
